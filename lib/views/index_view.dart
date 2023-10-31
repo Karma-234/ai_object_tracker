@@ -23,6 +23,7 @@ class _IndexViewState extends State<IndexView> {
     );
   }
 
+  Future loadMoadel2() async {}
   void initController() {
     _cameraController?.initialize().then((_) {
       if (!mounted) {
