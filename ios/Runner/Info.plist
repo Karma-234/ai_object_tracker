@@ -26,6 +26,12 @@
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need your permission to access photo gallery</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need your permission to use phone camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need your permission to use microsphone</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>

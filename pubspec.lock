@@ -258,7 +258,7 @@ packages:
     description:
       path: "."
       ref: fix
-      resolved-ref: c126fd56e8b945fa8073a1f31caaa4c26f9aa0a4
+      resolved-ref: "6a5613d3c01884a9fb5905624328e96a2da699ab"
       url: "https://github.com/Karma-234/flutter_tflite.git"
     source: git
     version: "1.1.2"
