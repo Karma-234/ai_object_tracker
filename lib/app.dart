@@ -1,3 +1,5 @@
+import 'package:ai_object_tracker/views/index_view.dart';
+import 'package:ai_object_tracker/views/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class MainApp extends StatelessWidget {
@@ -7,14 +9,10 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        "home": (context) => Container(),
+        "home": (context) => const SplashView(),
+        "dashboard": (context) => const IndexView()
       },
       title: 'Object Detection',
-      // home: const Scaffold(
-      //   body: Center(
-      //     child: Text('Hello World!'),
-      //   ),
-      // ),
     );
   }
 }
