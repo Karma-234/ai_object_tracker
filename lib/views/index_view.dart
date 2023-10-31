@@ -1,6 +1,7 @@
 import 'package:ai_object_tracker/core/extensions.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:tflite/tflite.dart';
 
 class IndexView extends StatefulWidget {
   const IndexView({super.key});
@@ -15,18 +16,11 @@ class _IndexViewState extends State<IndexView> {
   CameraImage? _cameraImage;
   bool isWorking = false;
   String result = "";
-  @override
-  void initState() {
-    super.initState();
-    Future.wait(
-      [availableCameras().then((value) => cameras = value)],
-    ).then((_) {
-      if ((cameras ?? []).isNotEmpty) {
-        _cameraController =
-            CameraController(cameras?[0] ?? [][0], ResolutionPreset.medium);
-        return;
-      }
-    });
+  Future loadModel() async {
+    await Tflite.loadModel(
+      model: "".lite,
+      labels: "".txt,
+    );
   }
 
   void initController() {
@@ -45,6 +39,51 @@ class _IndexViewState extends State<IndexView> {
     });
   }
 
+  loadModelOnStream() async {
+    if (_cameraImage != null) {
+      var recognitions = await Tflite.runModelOnFrame(
+        bytesList: _cameraImage!.planes.map((plane) => plane.bytes).toList(),
+        imageHeight: _cameraImage!.height,
+        imageWidth: _cameraImage!.width,
+        imageStd: 127.5,
+        imageMean: 127.5,
+        rotation: 90,
+        numResults: 3,
+        threshold: 0.1,
+        asynch: true,
+      );
+      recognitions?.forEach((resp) {
+        result +=
+            "${resp["label"]} ${(resp["confidence"] as double).toStringAsFixed(2)} \n\n";
+      });
+      setState(() {
+        result;
+        isWorking = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadModel().then((value) => Future.wait(
+          [availableCameras().then((value) => cameras = value)],
+        ).then((_) {
+          if ((cameras ?? []).isNotEmpty) {
+            _cameraController =
+                CameraController(cameras?[0] ?? [][0], ResolutionPreset.medium);
+            return;
+          }
+        }));
+  }
+
+  @override
+  void dispose() async {
+    await Tflite.close();
+    _cameraController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -61,7 +100,7 @@ class _IndexViewState extends State<IndexView> {
                 ? Container(
                     height: MediaQuery.sizeOf(context).height * 0.5,
                     width: MediaQuery.sizeOf(context).width,
-                    color: Colors.blue,
+                    color: Colors.grey,
                   )
                 : AspectRatio(
                     aspectRatio: _cameraController?.value.aspectRatio ?? 0,
@@ -83,6 +122,11 @@ class _IndexViewState extends State<IndexView> {
                   size: 40,
                 ),
               ),
+            ),
+            40.h,
+            Text(
+              result,
+              style: const TextStyle(fontSize: 40),
             )
           ],
         ),

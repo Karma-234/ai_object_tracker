@@ -57,7 +57,7 @@ class _SplashViewState extends State<SplashView>
       backgroundColor: Colors.blue,
       body: AnimatedAlign(
         duration: const Duration(
-          milliseconds: 900,
+          milliseconds: 700,
         ),
         alignment: _offset,
         child: AnimatedIcon(

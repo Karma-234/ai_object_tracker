@@ -26,6 +26,10 @@ android {
     namespace "com.example.ai_object_tracker"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
+    aaptOptions {
+        noCompress 'tflite'
+        noCompress 'lite'
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
