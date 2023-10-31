@@ -12,17 +12,14 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView>
     with SingleTickerProviderStateMixin {
   late Animation<double> _progress;
-  late Animation<AlignmentGeometry> _offset;
+  AlignmentGeometry _offset = const Alignment(0, 1);
   late AnimationController _animationController;
   @override
   void initState() {
     super.initState();
     _animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
-    _offset = Tween<AlignmentGeometry>(
-            begin: const Alignment(0, 1), end: const Alignment(0, 0))
-        .animate(_animationController);
-    _progress = Tween<double>(begin: 0.4, end: 1).animate(
+    _progress = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(
         parent: _animationController,
         curve: const Interval(
@@ -32,9 +29,18 @@ class _SplashViewState extends State<SplashView>
         ),
       ),
     );
-    _animationController.forward().then((value) {
-      Timer(const Duration(seconds: 1), () {
-        Navigator.of(context).pushNamed("dashboard");
+    Future.delayed(
+      const Duration(seconds: 1),
+      () {
+        setState(() {
+          _offset = const Alignment(0, 0);
+        });
+      },
+    ).then((_) {
+      _animationController.forward().then((_) {
+        Timer(const Duration(seconds: 2), () {
+          Navigator.of(context).pushNamed("dashboard");
+        });
       });
     });
   }
@@ -51,10 +57,11 @@ class _SplashViewState extends State<SplashView>
       backgroundColor: Colors.blue,
       body: AnimatedAlign(
         duration: const Duration(
-          seconds: 1,
+          milliseconds: 900,
         ),
-        alignment: _offset.value,
-        child: AnimatedIcon(icon: AnimatedIcons.home_menu, progress: _progress),
+        alignment: _offset,
+        child: AnimatedIcon(
+            icon: AnimatedIcons.home_menu, progress: _progress, size: 34),
       ),
     );
   }

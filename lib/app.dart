@@ -13,6 +13,14 @@ class MainApp extends StatelessWidget {
         "dashboard": (context) => const IndexView()
       },
       title: 'Object Detection',
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) {
+            return const SplashView();
+          },
+        );
+      },
     );
   }
 }
