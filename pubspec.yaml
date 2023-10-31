@@ -10,9 +10,10 @@ dependencies:
   camera: ^0.10.5+5
   flutter:
     sdk: flutter
-  tflite: ^1.1.2
-  tflite_flutter: ^0.10.3
-
+  tflite:
+   git:
+    url: https://github.com/Karma-234/flutter_tflite.git
+    ref: fix
 dev_dependencies:
   flutter_test:
     sdk: flutter
