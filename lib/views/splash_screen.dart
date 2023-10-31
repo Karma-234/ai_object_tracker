@@ -39,7 +39,7 @@ class _SplashViewState extends State<SplashView>
     ).then((_) {
       _animationController.forward().then((_) {
         Timer(const Duration(seconds: 2), () {
-          Navigator.of(context).pushNamed("dashboard");
+          Navigator.of(context).popAndPushNamed("dashboard");
         });
       });
     });
@@ -61,7 +61,11 @@ class _SplashViewState extends State<SplashView>
         ),
         alignment: _offset,
         child: AnimatedIcon(
-            icon: AnimatedIcons.home_menu, progress: _progress, size: 34),
+          icon: AnimatedIcons.home_menu,
+          progress: _progress,
+          size: 34,
+          color: Colors.white,
+        ),
       ),
     );
   }

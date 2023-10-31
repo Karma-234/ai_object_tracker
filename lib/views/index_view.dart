@@ -10,6 +10,6 @@ class IndexView extends StatefulWidget {
 class _IndexViewState extends State<IndexView> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold();
   }
 }
