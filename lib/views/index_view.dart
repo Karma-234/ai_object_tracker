@@ -15,6 +15,7 @@ class _IndexViewState extends State<IndexView> {
   CameraController? _cameraController;
   CameraImage? _cameraImage;
   bool isWorking = false;
+  bool isStreaming = false;
   String result = "";
   Future loadModel() async {
     await Tflite.loadModel(
@@ -23,7 +24,6 @@ class _IndexViewState extends State<IndexView> {
     );
   }
 
-  Future loadMoadel2() async {}
   void initController() {
     _cameraController?.initialize().then((_) {
       if (!mounted) {
@@ -33,11 +33,23 @@ class _IndexViewState extends State<IndexView> {
         _cameraController?.startImageStream((image) {
           if (!isWorking) {
             isWorking = true;
+            isStreaming = true;
             _cameraImage = image;
+            result = "";
+            loadModelOnStream();
           }
         });
       });
     });
+  }
+
+  void stopCOntroller() {
+    if (isStreaming) {
+      setState(() {
+        _cameraController?.stopImageStream();
+        isStreaming = false;
+      });
+    }
   }
 
   loadModelOnStream() async {
@@ -53,10 +65,12 @@ class _IndexViewState extends State<IndexView> {
         threshold: 0.1,
         asynch: true,
       );
+
       recognitions?.forEach((resp) {
         result +=
             "${resp["label"]} ${(resp["confidence"] as double).toStringAsFixed(2)} \n\n";
       });
+
       setState(() {
         result;
         isWorking = false;
@@ -112,7 +126,7 @@ class _IndexViewState extends State<IndexView> {
             32.h,
             Center(
               child: GestureDetector(
-                onTap: _cameraImage != null
+                onTap: isStreaming
                     ? null
                     : () {
                         initController();
@@ -124,10 +138,29 @@ class _IndexViewState extends State<IndexView> {
                 ),
               ),
             ),
+            32.h,
+            Center(
+              child: GestureDetector(
+                onTap: () {
+                  stopCOntroller();
+                },
+                child: const Icon(
+                  Icons.close,
+                  color: Colors.grey,
+                  size: 40,
+                ),
+              ),
+            ),
             40.h,
-            Text(
-              result,
-              style: const TextStyle(fontSize: 40),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Text(
+                    result,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ),
+              ),
             )
           ],
         ),
